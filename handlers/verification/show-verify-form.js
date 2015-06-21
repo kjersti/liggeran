@@ -1,4 +1,6 @@
 var i18n = require('../../lib/i18nConfig');
+var verificationToken = require('./verification-token');
+
 module.exports = function(request, reply){
   var context = {};
   console.log('------------');
@@ -6,10 +8,12 @@ module.exports = function(request, reply){
     console.log('has errors');
     context.validationError = request.validationError;
   } else if (request.method === 'post') {
+
+    var token = verificationToken(request.payload.workEmail);
     var options = {
       from: request.payload.privateEmail,
       to: request.payload.workEmail,
-      text: 'Hei sveis',
+      text: 'Hei sveis' + token,
       subject: 'yo'
     };
     request.server.methods.service.email.send(options, function(err, result){
